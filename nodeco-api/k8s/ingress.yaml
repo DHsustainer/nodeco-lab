@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name:  nodeco-api-ingress
+  namespace: nodeco-prod
+spec:
+  rules:
+  - host: nodeco.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName:  nodeco-api-service
+          servicePort:  api-prod-port

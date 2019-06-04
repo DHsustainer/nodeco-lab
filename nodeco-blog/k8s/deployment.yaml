@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nodeco-blog
+  name: nodeco-blog
+  namespace: nodeco-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodeco-blog
+  template:
+    metadata:
+      labels:
+        app: nodeco-blog
+    spec:
+      containers:
+      - image: gcr.io/devops-240314/nodeco-blog:prod
+        name: nodeco-blog
+        ports:
+        - containerPort: 8080

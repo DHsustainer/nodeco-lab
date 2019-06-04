@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nodeco-api
+  name: nodeco-api
+  namespace: nodeco-prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodeco-api
+  template:
+    metadata:
+      labels:
+        app: nodeco-api
+    spec:
+      containers:
+      - image: gcr.io/devops-240314/nodeco-api:prod
+        name: nodeco-api
+        ports:
+        - containerPort: 3000
