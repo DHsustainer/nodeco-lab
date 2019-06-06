@@ -1,0 +1,40 @@
+steps:
+#step 1
+- name: 'gcr.io/cloud-builders/docker' 
+  entrypoint: 'bash'
+  args: [
+   '-c', 
+   'docker pull gcr.io/$PROJECT_ID/<PROJECT_NAME>:<BRANCH_TAG> || exit 0'
+  ]
+#step 2
+- name: gcr.io/cloud-builders/docker
+  args: [
+   'build', 
+   '-t', 
+   'gcr.io/$PROJECT_ID/<PROJECT_NAME>:$BRANCH_NAME-$COMMIT_SHA', 
+   '.'
+  ]
+#step 3
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'k8s/<NAMESPACE>/']
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=<CLUSTER_ZONE>'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=<CLUSTER_NAME>
+#step 4
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: [
+   'set', 
+   'image', 
+   'deployment', 
+   '<PROJECT_NAME>', 
+   '<PROJECT_NAME>=gcr.io/$PROJECT_ID/<PROJECT_NAME>:$BRANCH_NAME-$COMMIT_SHA',
+   '--namespace=<NAMESPACE>'
+  ]
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=<CLUSTER_ZONE>'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=<CLUSTER_NAME>'
+# push images to Google Container Registry with tags
+images: [
+   'gcr.io/$PROJECT_ID/<PROJECT_NAME>:$BRANCH_NAME-$COMMIT_SHA',
+   'gcr.io/$PROJECT_ID/<PROJECT_NAME>:<BRANCH_TAG>'
+]
